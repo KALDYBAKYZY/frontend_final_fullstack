@@ -2,9 +2,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/context/AuthContext'
-import { api } from '@/lib/api'
-
+import { useAuth } from '../../context/AuthContext'
+import { api } from '../../lib/api'
 export default function LoginPage() {
   const [form, setForm]       = useState({ email: '', password: '' })
   const [error, setError]     = useState('')

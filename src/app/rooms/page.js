@@ -1,8 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useAuth } from '@/context/AuthContext'
-import { api } from '@/lib/api'
+import { useAuth } from '../../context/AuthContext'
+import { api } from '../../lib/api'
 
 const emptyForm = { name: '', description: '', subject: '', isPrivate: false, tags: '' }
 

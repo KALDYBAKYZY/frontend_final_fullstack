@@ -1,6 +1,6 @@
-import { AuthProvider } from '@/context/AuthContext'
-import { SocketProvider } from '@/context/SocketContext'
-import Navbar from '@/components/Navbar'
+import { AuthProvider } from '../context/AuthContext'
+import { SocketProvider } from '../context/SocketContext'
+import Navbar from '../components/Navbar'
 import './globals.css'
 
 export const metadata = {

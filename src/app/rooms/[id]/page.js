@@ -1,11 +1,11 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
-import { useAuth } from '@/context/AuthContext'
-import { useSocket } from '@/context/SocketContext'
-import { api } from '@/lib/api'
-import ChatBox from '@/components/ChatBox'
-import OnlineUsers from '@/components/OnlineUsers'
+import { useAuth } from '../../../context/AuthContext'
+import { useSocket } from '../../../context/SocketContext'
+import { api } from '../../../lib/api'
+import ChatBox from '../../../components/ChatBox'
+import OnlineUsers from '../../../components/OnlineUsers'
 
 export default function RoomDetailPage() {
   const { id } = useParams()

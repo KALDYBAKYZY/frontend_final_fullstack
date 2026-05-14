@@ -1,8 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { useAuth } from '@/context/AuthContext'
-import { api } from '@/lib/api'
+import { useAuth } from '../../../context/AuthContext'
+import { api } from '../../../lib/api'
 import { UploadButton } from '@uploadthing/react'
 
 export default function NoteDetailPage() {

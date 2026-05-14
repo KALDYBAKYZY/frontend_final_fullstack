@@ -1,6 +1,13 @@
 {
-  "/rooms/[id]/page": "app/rooms/[id]/page.js",
-  "/rooms/page": "app/rooms/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/notes/[id]/page": "app/notes/[id]/page.js",
-  "/notes/page": "app/notes/page.js"
+  "/notes/page": "app/notes/page.js",
+  "/page": "app/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/login/page": "app/login/page.js",
+  "/rooms/[id]/page": "app/rooms/[id]/page.js",
+  "/register/page": "app/register/page.js",
+  "/profile/page": "app/profile/page.js",
+  "/rooms/page": "app/rooms/page.js",
+  "/api/uploadthing/route": "app/api/uploadthing/route.js"
 }

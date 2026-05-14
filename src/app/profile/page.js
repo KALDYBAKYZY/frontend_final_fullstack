@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
-import { useAuth } from '@/context/AuthContext'
-import { api } from '@/lib/api'
+import { useAuth } from '../../context/AuthContext'
+import { api } from '../../lib/api'
 import { UploadButton } from '@uploadthing/react'
 
 export default function ProfilePage() {
