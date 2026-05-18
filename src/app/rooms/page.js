@@ -8,15 +8,17 @@ import Toast from '../../components/Toast'
 const emptyForm = { name: '', description: '', subject: '', isPrivate: false, tags: '' }
 
 export default function RoomsPage() {
-  const { token, user }       = useAuth()
-  const [rooms, setRooms]     = useState([])
-  const [search, setSearch]   = useState('')
-  const [subject, setSubject] = useState('')
-  const [loading, setLoading] = useState(true)
+  const { token, user }         = useAuth()
+  const [rooms, setRooms]       = useState([])
+  const [search, setSearch]     = useState('')
+  const [subject, setSubject]   = useState('')
+  const [loading, setLoading]   = useState(true)
   const [showForm, setShowForm] = useState(false)
-  const [form, setForm]       = useState(emptyForm)
-  const [saving, setSaving]   = useState(false)
-  const [toast, setToast]     = useState(null)
+  const [form, setForm]         = useState(emptyForm)
+  const [saving, setSaving]     = useState(false)
+  const [toast, setToast]       = useState(null)
+  const [editRoom, setEditRoom] = useState(null)
+  const [editForm, setEditForm] = useState({ name: '', description: '', subject: '', tags: '' })
 
   const fetchRooms = async () => {
     const params = new URLSearchParams()
@@ -54,6 +56,43 @@ export default function RoomsPage() {
         fetchRooms()
         setToast({ message: 'Joined room!', type: 'success' })
       }
+    } catch (err) {
+      setToast({ message: err.message, type: 'error' })
+    }
+  }
+
+  const handleDelete = async (roomId) => {
+    if (!confirm('Delete this room?')) return
+    try {
+      await api.delete(`/rooms/${roomId}`, token)
+      setToast({ message: 'Room deleted!', type: 'success' })
+      fetchRooms()
+    } catch (err) {
+      setToast({ message: err.message, type: 'error' })
+    }
+  }
+
+  const handleEditOpen = (r) => {
+    setEditRoom(r._id)
+    setEditForm({
+      name:        r.name,
+      description: r.description,
+      subject:     r.subject,
+      tags:        (r.tags || []).join(', '),
+    })
+  }
+
+  const handleEditSave = async (e) => {
+    e.preventDefault()
+    try {
+      const payload = {
+        ...editForm,
+        tags: editForm.tags.split(',').map(t => t.trim()).filter(Boolean)
+      }
+      await api.patch(`/rooms/${editRoom}`, payload, token)
+      setEditRoom(null)
+      setToast({ message: 'Room updated!', type: 'success' })
+      fetchRooms()
     } catch (err) {
       setToast({ message: err.message, type: 'error' })
     }
@@ -130,6 +169,7 @@ export default function RoomsPage() {
           {rooms.map((r) => {
             const isMember  = r.members?.some(m => m._id === user?._id)
             const isPending = r.pendingRequests?.some(p => p._id === user?._id)
+            const isOwner   = r.owner?._id === user?._id
 
             return (
               <div key={r._id} className="card">
@@ -137,11 +177,14 @@ export default function RoomsPage() {
                   <span className="badge badge-subject">{r.subject}</span>
                   {r.isPrivate && <span className="badge badge-private">Private</span>}
                 </div>
+
                 <h3 style={{ marginBottom: '6px' }}>{r.name}</h3>
                 <p style={{ fontSize: '13px', color: '#888', marginBottom: '8px' }}>{r.description}</p>
                 <p style={{ fontSize: '12px', color: '#aaa', marginBottom: '14px' }}>{r.members?.length} members</p>
-                <div style={{ display: 'flex', gap: '8px' }}>
+
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   <Link href={`/rooms/${r._id}`} className="btn btn-secondary btn-sm">Open</Link>
+
                   {!isMember && (
                     isPending ? (
                       <button className="btn btn-secondary btn-sm" disabled>Pending...</button>
@@ -151,7 +194,50 @@ export default function RoomsPage() {
                       </button>
                     )
                   )}
+
+                  {isOwner && (
+                    <>
+                      <button className="btn btn-secondary btn-sm" onClick={() => handleEditOpen(r)}>Edit</button>
+                      <button className="btn btn-danger btn-sm" onClick={() => handleDelete(r._id)}>Delete</button>
+                    </>
+                  )}
                 </div>
+
+                {/* Edit form — shows inside the card */}
+                {editRoom === r._id && (
+                  <div style={{ marginTop: '16px', borderTop: '1px solid #eee', paddingTop: '16px' }}>
+                    <form onSubmit={handleEditSave}>
+                      <div className="form-group">
+                        <label className="form-label">Room Name</label>
+                        <input className="form-input" required
+                          value={editForm.name}
+                          onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Subject</label>
+                        <input className="form-input" required
+                          value={editForm.subject}
+                          onChange={(e) => setEditForm({ ...editForm, subject: e.target.value })} />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Description</label>
+                        <textarea className="form-textarea" style={{ minHeight: '60px' }}
+                          value={editForm.description}
+                          onChange={(e) => setEditForm({ ...editForm, description: e.target.value })} />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Tags</label>
+                        <input className="form-input"
+                          value={editForm.tags}
+                          onChange={(e) => setEditForm({ ...editForm, tags: e.target.value })} />
+                      </div>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button className="btn btn-primary btn-sm" type="submit">Save</button>
+                        <button className="btn btn-secondary btn-sm" type="button" onClick={() => setEditRoom(null)}>Cancel</button>
+                      </div>
+                    </form>
+                  </div>
+                )}
               </div>
             )
           })}
