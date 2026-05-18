@@ -42,8 +42,11 @@ frontend/src/
 
 ## ⚙️ Environment Variables
 Create a `.env` file in the root:
+
 NEXT_PUBLIC_API_URL=https://backend-final-fullstack.onrender.com/api (use your url in #Versel for backend) 
+
 NEXT_PUBLIC_WS_URL=wss://backend-final-fullstack.onrender.com/ws (use your url in #Versel for backend) 
+
 UPLOADTHING_TOKEN=your_uploadthing_token (you can get your token in this site #https://uploadthing.com)
 
 ## 🚀 Setup & Run
