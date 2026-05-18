@@ -1,4 +1,4 @@
-// File: C:\Users\bisem\OneDrive\Desktop\final_fullstack\frontend\src\app\rooms\page.js
+// File: /Users/gulnazzhaiylgan/studyhub/frontend/src/app/rooms/page.js
 import * as entry from '../../../../src/app/rooms/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
