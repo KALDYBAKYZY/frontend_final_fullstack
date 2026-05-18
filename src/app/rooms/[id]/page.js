@@ -38,26 +38,24 @@ export default function RoomDetailPage() {
     return () => send({ type: 'leave_room', roomId: id })
   }, [id, send, connected])
 
-  useEffect(() => {
-    const unsubMsg = on('chat_message', (data) => {
-      setMessages((prev) => [...prev, data.message])
-    })
-    const unsubOnline = on('online_users', (data) => {
-      setOnlineUsers(data.users)
-    })
-    const unsubDelete = on('delete_message', (data) => {
+useEffect(() => {
+  const unsubMsg = on('chat_message', (data) => {
+    setMessages((prev) => [...prev, data.message])
+  })
+  const unsubOnline = on('online_users', (data) => {
+    setOnlineUsers(data.users)
+  })
+  const unsubDelete = on('delete_message', (data) => {
     setMessages((prev) => prev.filter((m) => m._id !== data.messageId))
-    })
-    return () => { unsubMsg(); unsubOnline(); unsubDelete() }
-  }, [on])
+  })
+  return () => { unsubMsg(); unsubOnline(); unsubDelete() }
+}, [on])
 
   const sendMessage = async (content) => {
-    const msg = await api.post(`/messages/${id}`, { content }, token)
-    console.log('msg from DB:', msg)
-    console.log('user._id:', user?._id)
-    send({ type: 'chat_message', roomId: id, content })
-    setMessages((prev) => [...prev, msg])
-  }
+  const msg = await api.post(`/messages/${id}`, { content }, token)
+  send({ type: 'chat_message', roomId: id, content, messageId: msg._id })
+  setMessages((prev) => [...prev, msg])
+}
 const deleteMessage = async (msgId) => {
     console.log('deleting:', msgId, 'roomId:', id)
     await api.delete(`/messages/${msgId}`, token)
